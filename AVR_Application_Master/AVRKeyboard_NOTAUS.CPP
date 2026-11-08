@@ -10,7 +10,7 @@
 /*****************************************/
 
 #include <avr/io.h>
-#include "AVRKeyboard_NOTAUS.H"
+#include "AVRKeyboard_NOTAUS.h"
 /*Hardware keyboard:
 		Zeilen   B2,B1,B0  Access with Decoder 
 		Spalten  D4 (left),D5,D6(right)

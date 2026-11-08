@@ -1,4 +1,3 @@
-#include <stdint.h>
 /*****************************************/
 /*    AVR Board1 Application Master      */
 /*	   Aly, Mohamed                  */
@@ -13,8 +12,8 @@
 #include <avr/io.h> 		// Ports, Registers definitions
 #include <avr/interrupt.h>  // Interrupts definitions
 #include <stdbool.h>        // bool
-#include "FIFO.H"
-#include "AVRUSART.H"
+#include "FIFO.h"
+#include "AVRUSART.h"
 #include "Schrittmotor.h"
 //******************************************************************   RS232 **************
 clsFIFO FIFO_RX;  // FIFO objects      vom Computer zum Micro

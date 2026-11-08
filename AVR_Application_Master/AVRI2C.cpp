@@ -14,6 +14,7 @@
 //-------------------------- TWI  Two Wire Interface I2C -----------------------
 void wait_TWINT (unsigned char errorcode)
 {unsigned int waitcount = 0;
+ (void)errorcode;              // reserved for error reporting, currently unused
  while ((!(TWCR & (1<<TWINT))) && (waitcount <= TimeOut))
 	{waitcount++;};             // warten bis fertig oder TimeOut
 }

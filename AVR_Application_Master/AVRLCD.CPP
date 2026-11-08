@@ -10,7 +10,7 @@
 /*****************************************/ 
 
 #include  <avr/io.h>
-#include "AVRLCD.H"
+#include "AVRLCD.h"
 //--------------------------   some defines and the free characterset ----------------
 #include "LCDset.h"
 

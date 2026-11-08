@@ -1,6 +1,7 @@
+#include <stdint.h>
 /*****************************************/
 /*    AVR Board1 Application Master      */
-/*	   Aly, Al-Dhubri ,                  */
+/*	   Aly, Mohamed                  */
 /*	  Datum 09.07.2026                    */
 /*	                                     */
 /*    AVRUSART.cpp				         */
@@ -54,7 +55,7 @@ void clsUSART::send_String (const char* Text)
 			{ send (*Text++);
 			}
 	}
-void clsUSART::Drehzahl1_Ausgabe (char Zahl)						// Terminal Ausgabe für Drehzahl (0-9)
+void clsUSART::Drehzahl1_Ausgabe (char Zahl)						// Terminal Ausgabe fÃ¼r Drehzahl (0-9)
 	{ 
 		send_String("Die Drehzahl: ");
 		send(Zahl);
@@ -65,7 +66,7 @@ void clsUSART::Drehzahl1_Ausgabe (char Zahl)						// Terminal Ausgabe für Drehza
 		
 	}
 
-void clsUSART::Drehzahl2_Ausgabe (char Zahl1, char Zahl2)			// Terminal Ausgabe für Drehzahl (10-99)
+void clsUSART::Drehzahl2_Ausgabe (char Zahl1, char Zahl2)			// Terminal Ausgabe fÃ¼r Drehzahl (10-99)
 	{
 		send_String("Die Drehzahl: ");
 		send(Zahl1);
@@ -77,7 +78,7 @@ void clsUSART::Drehzahl2_Ausgabe (char Zahl1, char Zahl2)			// Terminal Ausgabe 
 	}
 
 void clsUSART::Fehler_Ausgabe (char Fehler)			
-	// Terminal Ausgabe für Fehler
+	// Terminal Ausgabe fÃ¼r Fehler
 	// Fehlercode 1: Es koennen maximal zweistellige Zahlen eingegeben werden!
 	// Fehlercode 2: Geben Sie eine Drehzahl !=0 zwischen -99 und 99 ein! 
 	// Fehlercode 3: Ungueltige Eingabe!
@@ -134,6 +135,6 @@ ISR(USART_UDRE_vect)								// USART Data Register Empty Interupt
 ISR(USART_TX_vect)									// Transmit Complete Interrupt
 {   while (1);    									    // not used
 }
-//---------------------------------------------------------- that´s it for RS232 ----------
+//---------------------------------------------------------- thatÂ´s it for RS232 ----------
 
 

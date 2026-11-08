@@ -1,0 +1,111 @@
+
+name: AVR Stepper Motor CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-avr:
+    name: Build Master and Slave
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install AVR toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-avr avr-libc binutils-avr
+
+      - name: Show toolchain versions
+        run: |
+          avr-g++ --version
+          avr-objcopy --version
+
+      - name: Prepare case-sensitive header compatibility
+        run: |
+          cd AVR_Application_Master
+          ln -sf AVRKeyboard_NOTAUS.h AVRKeyboard_NOTAUS.H
+          ln -sf AVRLCD.h AVRLCD.H
+          ln -sf AVRUSART.h AVRUSART.H
+          ln -sf FIFO.h FIFO.H
+
+      - name: Build Master firmware
+        run: |
+          mkdir -p build/master
+
+          avr-g++ -x c++ \
+            -mmcu=atmega168 \
+            -Os \
+            -funsigned-char \
+            -funsigned-bitfields \
+            -ffunction-sections \
+            -fdata-sections \
+            -fpack-struct \
+            -fshort-enums \
+            -Wall \
+            -I AVR_Application_Master \
+            AVR_Application_Master/AVR8574.cpp \
+            AVR_Application_Master/AVRI2C.cpp \
+            AVR_Application_Master/AVRIO_I2C_Master.cpp \
+            AVR_Application_Master/AVR_Application_Master.CPP \
+            AVR_Application_Master/AVRKeyboard_NOTAUS.CPP \
+            AVR_Application_Master/AVRLCD.CPP \
+            AVR_Application_Master/AVRTimer0.CPP \
+            AVR_Application_Master/AVRUSART.CPP \
+            AVR_Application_Master/FIFO.CPP \
+            AVR_Application_Master/Schrittmotor.cpp \
+            -Wl,--gc-sections \
+            -Wl,-Map=build/master/master.map \
+            -lm \
+            -o build/master/master.elf
+
+          avr-objcopy -O ihex -R .eeprom \
+            build/master/master.elf build/master/master.hex
+
+          avr-size build/master/master.elf
+
+      - name: Build Slave firmware
+        run: |
+          mkdir -p build/slave
+
+          avr-g++ -x c++ \
+            -mmcu=atmega168 \
+            -Os \
+            -funsigned-char \
+            -funsigned-bitfields \
+            -ffunction-sections \
+            -fdata-sections \
+            -fpack-struct \
+            -fshort-enums \
+            -Wall \
+            -I AVRIO1_Slave_I2C \
+            AVRIO1_Slave_I2C/AVRIO1_Slave_I2C.cpp \
+            AVRIO1_Slave_I2C/AVRI2C_Master_Slave.cpp \
+            AVRIO1_Slave_I2C/AVRLEDMatrix.cpp \
+            AVRIO1_Slave_I2C/AVRTimer0.cpp \
+            -Wl,--gc-sections \
+            -Wl,-Map=build/slave/slave.map \
+            -lm \
+            -o build/slave/slave.elf
+
+          avr-objcopy -O ihex -R .eeprom \
+            build/slave/slave.elf build/slave/slave.hex
+
+          avr-size build/slave/slave.elf
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: AVR-Stepper-Firmware
+          path: |
+            build/master/
+            build/slave/
